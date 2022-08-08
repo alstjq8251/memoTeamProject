@@ -46,16 +46,17 @@ jwt:
 cloud:
   aws:
     s3:
-      bucket: 1234
+      bucket: hong-bucket
     region:
-      static: 1234
+      static: ap-northeast-2
     credentials:
       #            accessKey: 1234
       #            secretKey: 1234
 
 
-      accessKey: 1234
-      secretKey: 1234
+      accessKey: AKIAV2YUT66TNLV7YS3L
+      secretKey: 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
+
 
     stack:
       auto =false:
