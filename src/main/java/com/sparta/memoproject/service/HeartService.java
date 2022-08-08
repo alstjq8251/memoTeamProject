@@ -36,11 +36,11 @@ public class HeartService {
 
         if (isAlreadyHeartToMemo(nickname, memo)) {
             Heart heart = heartRepository.findByNicknameAndMemo(nickname, memo).get();
-
+            memo.deleteHeart(heart);
             heartRepository.delete(heart);
         } else {
             Heart heart = new Heart(nickname, memo);
-
+            memo.addHeart(heart);
             heartRepository.save(heart);
         }
         return heartRepository.countByMemo(memo);
@@ -57,9 +57,11 @@ public class HeartService {
 
         if (isAlreadyHeartToComment(nickname, comment)) {
             Heart heart = heartRepository.findByNicknameAndComment(nickname, comment).get();
+            comment.deleteHeart(heart);
             heartRepository.delete(heart);
         } else{
             Heart heart = new Heart(nickname, comment);
+            comment.addHeart(heart);
             heartRepository.save(heart);
         }
         return heartRepository.countByComment(comment);
