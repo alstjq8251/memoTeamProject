@@ -1,7 +1,6 @@
 package com.sparta.memoproject.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.memoproject.Timestamped;
 import com.sparta.memoproject.dto.CommentRequestDto;
@@ -52,10 +51,10 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "MEMO_ID", nullable = false)
     private Memo memo;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)  //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
-    @JsonManagedReference //DB연관관계 무한회귀 방지
-    private List<Heart> heartList;
+//    @JsonIgnore
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)  //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
+//    @JsonManagedReference //DB연관관계 무한회귀 방지
+//    private List<Heart> heartList;
 
 //    @Builder
 //    public Comment(String author, String content, Authority authority) { //
@@ -82,16 +81,15 @@ public class Comment extends Timestamped {
         this.heartCnt = heartCnt;
     }
 
-    public void addHeart(Heart heart) {
-        this.heartList.add(heart);
-
-
-    }
-
-    public void deleteHeart(Heart heart) {
-        this.heartList.remove(heart);
-    }
-
+    //    public void addHeart(Heart heart) {
+////        this.heartList.add(heart);
+//
+//
+//    }
+//
+//    public void deleteHeart(Heart heart){
+//        this.heartList.remove(heart);
+//    }
     public void setComment(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
     }
