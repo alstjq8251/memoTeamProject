@@ -3,6 +3,7 @@ package com.sparta.memoproject.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.memoproject.Timestamped;
 import com.sparta.memoproject.dto.MemoRequestDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,19 +32,10 @@ public class Memo extends Timestamped { // 생성,수정 시간을 자동으로 
 //
     @Column(nullable = false)
     private String memberName;
-
-    @Column
-    private Long heartCnt;
-
-    @Column
-    private Long commentCnt;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)  //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
     @JsonManagedReference //DB연관관계 무한회귀 방지
 //    @JsonIgnore
     private List<Comment> commentList;
-
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)  //부모가 삭제될 때 자식들도 다 삭제되는 어노테이션
     @JsonManagedReference //DB연관관계 무한회귀 방지
 //    @JsonIgnore
@@ -55,7 +47,6 @@ public class Memo extends Timestamped { // 생성,수정 시간을 자동으로 
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
-
 //    추가된내용
     public Memo(MemoRequestDto requestDto, String memberName, String urlPath) {
         this.memberName = memberName;
@@ -63,7 +54,6 @@ public class Memo extends Timestamped { // 생성,수정 시간을 자동으로 
         this.contents = requestDto.getContents();
         this.urlPath = urlPath;
     }
-
 
     public void update(MemoRequestDto requestDto) {
         this.title = requestDto.getTitle();
@@ -73,14 +63,15 @@ public class Memo extends Timestamped { // 생성,수정 시간을 자동으로 
     public void addComment(Comment comment) {
         this.commentList.add(comment);
     }
-
-
-
     //    commentId로 받고 commentList.removeIf(comment -> comment.getId().equals(commentId)); 해도 제거는 된다.
     public void deleteComment(Comment comment) {
         commentList.remove(comment);
     }
-
-
+    public void addHeart(Heart heart) {
+        this.heartList.add(heart);
+    }
+    public void deleteHeart(Heart heart) {
+        this.heartList.remove(heart);
+    }
 
 }

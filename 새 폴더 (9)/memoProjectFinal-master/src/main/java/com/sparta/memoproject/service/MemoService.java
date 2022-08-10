@@ -103,33 +103,42 @@ public class MemoService {
         deletedUrlPath.setDeletedUrlPath(memo.getUrlPath());
 
         deletedUrlPathRepository.save(deletedUrlPath);
+        // 메모 지워질때 하트안지워지고 뭐뭐남았쬬 ? 하트만? 오키요
 
+
+        List<Comment> commentList = commentRepository.findAllByMemo(memo);
+        for (Comment comment : commentList) {
+            heartRepository.deleteByComment(comment);
+        }
+
+        heartRepository.deleteByMemo(memo);
         memoRepository.deleteById(id);
         return true;
     }
 
-//    @Transactional
-//    public Memo showMemoDetail(Long id) {
-//        Memo memo = memoRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("메모가 존재하지 않습니다"));
-//        List<Comment> commentList = commentRepository.findAllByMemo(memo);
-//
-//        memo.setHeartCnt(heartRepository.countByMemo(memo));
-//        for (Comment comment : commentList) {
-//            comment.setHeartCnt(heartRepository.countByComment(comment));
-//        }
-//
-//        return memo;
-//    }
-
+    @Transactional
     public MemoSoloDto readMemoSoloDto(Long Id) {
         Memo memo = memoRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("유저 정보가 없습니다."));
-        MemoSoloDto memoSoloDto = new MemoSoloDto(memo);
+        List<Comment> commentList = commentRepository.findAllByMemo(memo);
+        for (Comment comment : commentList) {
+            comment.setCntHeart(Long.valueOf(comment.getHeartList().size()));
+        }
+        MemoSoloDto memoSoloDto = MemoSoloDto.builder()
+                .createdAt(memo.getCreatedAt())
+                .modifiedAt(memo.getModifiedAt())
+                .id(memo.getId())
+                .title(memo.getTitle())
+                .contents(memo.getContents())
+                .memberName(memo.getMemberName())
+                .contents(memo.getContents())
+                .commentCnt(memo.getCommentList().size())
+                .heartCnt(memo.getHeartList().size())
+                .commentList(memo.getCommentList())
+                .build();
         return memoSoloDto;
+
     }
-
-
 
     public void removeS3Image() {
         List<DeletedUrlPath> deletedUrlPathList = deletedUrlPathRepository.findAll();
